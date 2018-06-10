@@ -4,3 +4,4 @@ Game of The Owl
    The mission of owl is to land somewhere. 
    We can kill the owl only if he land . 
    Just use the control menu.
+   We use javaScript.
