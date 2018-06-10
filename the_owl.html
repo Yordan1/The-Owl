@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="BG-bg">
+	<head>
+		<meta charset="UTF-8" />
+		<title>Ajax Examples</title>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="myJavascript.js"></script>
+		<style>
+			html{height:100%;}
+			body
+			{
+				background-image:url('images/spritzschutz_gras.jpg');
+				background-position: left bottom;
+				background-repeat: repeat-x;
+				background-size: 300px;
+			}
+			
+			#the_tree
+			{
+				height:650px;
+				bottom:0px;
+				right:0px;
+				position: absolute;				
+			}
+			
+			#the_owl
+			{
+				height:100px;
+				position: absolute;
+				top:0px;
+				left:0px;				
+			}
+			
+			#control_panel
+			{
+				border-radius:0px 15px 15px 0px;
+				border:2px solid maroon;
+				background-color:#963c3c;
+				position: fixed;
+				top:100px;
+				left:0px;
+			}
+			
+			#control_panel_column{
+				border:2px solid maroon;
+				background-color:#963c3c;
+				position: fixed;
+				bottom:0px;
+				left:0px;
+				top:100px;
+				width:10px;
+			}
+			
+			.locked_owl{
+				cursor:crosshair;
+				height:100px;
+				position: absolute;
+			}
+			
+			.locked_owl:hover{
+				opacity:0.75;
+			}
+			
+			#output_console
+			{
+				font-family:Consolas;
+				font-size:18px;
+				font-weight:bold;
+				position:fixed;
+				right:0px;
+				top:0px;
+				padding-right:10px;
+			}
+			
+			#wa_logo{
+				position:absolute; 
+				bottom:0px; 
+				right:115px; 
+				width:1000px; 
+				opacity:0.1;
+			}
+			
+			#lock_button{border-radius:0px 15px 15px 0px;}
+		</style>	
+	</head>
+	<body>
+		<p id="output_console"></p>
+		<img id="wa_logo" src="images/wa_logo.png" alt="WebAcademy" />
+		<img id="the_tree" src="images/tree-01.jpg" alt="tree" />
+		<img id="the_owl" src="images/owl_with_rose_thumb.png" alt="buhal" />
+		<div id="control_panel_column"></div>
+		<div id="control_panel">
+			<button id="switch_button">&dArr;</button>
+			<input type="button" data-direction="left" id="move_left" value="Ляво" />
+			<input type="button" data-direction="right" id="move_right" value="Дясно" />
+			<input type="button" data-direction="top" id="move_top" value="Горе" />
+			<input type="button" data-direction="bottom" id="move_bottom" value="Долу" />
+			<button id="lock_button">Кацни</button>
+		</div>
+		<script>
+			var cur_pos_x;
+			var cur_pos_y;
+			var move_speed = 50;	
+			var output_console;
+			var is_half = false;
+			
+			function move_owl(new_direction)
+			{
+				output_console.html('');
+				
+				switch(new_direction)
+				{
+					case 'right': cur_pos_x = Number($('#the_owl').offset().left) + move_speed; break;
+					case 'left': cur_pos_x = Number($('#the_owl').offset().left) - move_speed; break;
+					case 'top': cur_pos_y = Number($('#the_owl').offset().top) - move_speed; break;
+					case 'bottom': cur_pos_y = Number($('#the_owl').offset().top) + move_speed; break;
+					default: output_console.html('wrong direction: '+new_direction); break;
+				}
+				
+				console.log(cur_pos_x);
+				console.log(cur_pos_y);
+				
+				$('#the_owl').css('left', cur_pos_x);
+				$('#the_owl').css('top', cur_pos_y);
+			}
+			
+			function lock_owl()
+			{
+				$('body').html($('body').html() + '<img class="locked_owl" src="' + $('#the_owl').attr('src') + '" alt="buhal" style="left:'+cur_pos_x+'px; top:'+cur_pos_y+'px;" />');
+				output_console.html('Готово! Кацнах! Мести отново...');
+			}
+			
+			$(document).ready(function () {
+				output_console = $('#output_console');
+				cur_pos_x = 0;
+				cur_pos_y = 0;
+				
+				$('input[type=button]').click(function () {
+					move_owl($(this).data('direction'));	
+				});	
+				
+				$('#lock_button').click(function (){
+					lock_owl();
+				});
+				
+				$('#the_owl').click(function (){
+					output_console.html('Мен не можеш да убиеш - Аз още не съм кацнал! :)');
+				});
+				
+				$('.locked_owl').click(function (){
+					output_console.html('Ти си жесток убиец - Уби ме! :(');
+					$(this).remove();
+				});
+				
+				$('.locked_owl').hover(function (){
+					output_console.html('ВНИМАВАЙ! Ако кликнеш върху мен, ще ме застреляш! :(');
+				});
+				
+				$('#switch_button').click(function (){
+					if(is_half == false)
+					{
+						$('#switch_button').html('&uArr;');
+						$('#control_panel').css('top', '50%');
+						$('#control_panel_column').css('top', '50%');
+					}
+					else
+					{
+						$('#switch_button').html('&dArr;');
+						$('#control_panel').css('top', '100px');
+						$('#control_panel_column').css('top', '100px');
+					}
+					
+					is_half = !is_half;
+				});
+			});	
+		</script>
+	</body>
+</html>
